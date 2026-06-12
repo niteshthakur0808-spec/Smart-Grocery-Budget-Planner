@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grocery List</title>
+
+<style>
+
+body{
+    margin:0;
+    font-family:Arial;
+    background:#f4f4f4;
+}
+
+.header{
+    background:#2e7d32;
+    color:white;
+    padding:20px;
+    text-align:center;
+}
+
+.container{
+    margin:30px;
+    background:white;
+    padding:20px;
+    border-radius:10px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    background:#43a047;
+    color:white;
+    padding:15px;
+}
+
+td{
+    padding:12px;
+    border-bottom:1px solid #ddd;
+    text-align:center;
+}
+
+input{
+    padding:10px;
+    margin:10px;
+    width:200px;
+}
+
+button{
+    padding:10px 20px;
+    background:#2e7d32;
+    color:white;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+.remove-btn{
+    background:#e53935;
+    color:white;
+    border:none;
+    padding:6px 12px;
+    border-radius:4px;
+    cursor:pointer;
+}
+
+.back-btn{
+    text-decoration:none;
+    background:#2e7d32;
+    color:white;
+    padding:10px 20px;
+    border-radius:5px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+
+    <h1 id="groceryTitle">
+        Grocery List
+    </h1>
+
+</div>
+
+<div class="container">
+
+<table>
+
+<thead>
+
+<tr>
+
+    <th id="itemHead">
+        Item
+    </th>
+
+    <th id="quantityHead">
+        Quantity
+    </th>
+
+    <th id="priceHead">
+        Price
+    </th>
+
+    <th></th>
+
+</tr>
+
+</thead>
+
+<tbody id="tableBody"></tbody>
+
+</table>
+
+<br>
+
+<input
+type="text"
+id="item"
+placeholder="Enter Item">
+
+<input
+type="text"
+id="quantity"
+placeholder="Enter Quantity">
+
+<input
+type="text"
+id="price"
+placeholder="Enter Price">
+
+<button
+onclick="addItem()"
+id="addButton">
+
+    Add Item
+
+</button>
+
+<br><br>
+
+<a href="index.html"
+class="back-btn">
+
+    ← Home
+
+</a>
+
+</div>
+
+<script>
+
+let groceryList =
+JSON.parse(
+localStorage.getItem("groceryList")
+) || [];
+
+let records =
+JSON.parse(
+localStorage.getItem("records")
+) || [];
+
+/* TRANSLATE TEXT */
+
+function translateText(text, language){
+
+    let words = {
+
+        rice:{
+            hi:"चावल",
+            mr:"तांदूळ",
+            en:"Rice"
+        },
+
+        milk:{
+            hi:"दूध",
+            mr:"दूध",
+            en:"Milk"
+        },
+
+        bread:{
+            hi:"ब्रेड",
+            mr:"ब्रेड",
+            en:"Bread"
+        },
+
+        eggs:{
+            hi:"अंडे",
+            mr:"अंडी",
+            en:"Eggs"
+        },
+
+        apple:{
+            hi:"सेब",
+            mr:"सफरचंद",
+            en:"Apple"
+        }
+
+    };
+
+    let lower =
+    text.toLowerCase();
+
+    for(let key in words){
+
+        if(lower === key){
+
+            return words[key][language];
+        }
+    }
+
+    return text;
+}
+
+/* RENDER */
+
+function render(){
+
+    let language =
+    localStorage.getItem("language")
+    || "en";
+
+    let table =
+    document.getElementById("tableBody");
+
+    table.innerHTML = "";
+
+    groceryList.forEach((item, index)=>{
+
+        let translated =
+        translateText(
+            item.name,
+            language
+        );
+
+        table.innerHTML += `
+
+        <tr>
+
+            <td contenteditable="true"
+            onblur="updateItem(${index}, 'name', this.innerText)">
+
+                ${translated}
+
+            </td>
+
+            <td contenteditable="true"
+            onblur="updateItem(${index}, 'quantity', this.innerText)">
+
+                ${item.quantity}
+
+            </td>
+
+            <td contenteditable="true"
+            onblur="updateItem(${index}, 'price', this.innerText)">
+
+                ₹${item.price}
+
+            </td>
+
+            <td>
+
+                <button
+                class="remove-btn"
+                onclick="removeItem(${index})">
+
+                    Remove
+
+                </button>
+
+            </td>
+
+        </tr>
+        `;
+    });
+}
+
+/* UPDATE */
+
+function updateItem(index, field, value){
+
+    groceryList[index][field] = value;
+
+    localStorage.setItem(
+        "groceryList",
+        JSON.stringify(groceryList)
+    );
+}
+
+/* REMOVE */
+
+function removeItem(index){
+
+    groceryList.splice(index, 1);
+
+    localStorage.setItem(
+        "groceryList",
+        JSON.stringify(groceryList)
+    );
+
+    render();
+}
+
+/* ADD ITEM */
+
+function addItem(){
+
+    let name =
+    document.getElementById("item").value;
+
+    let quantity =
+    document.getElementById("quantity").value;
+
+    let price =
+    document.getElementById("price").value;
+
+    let language =
+    localStorage.getItem("language")
+    || "en";
+
+    if(name === "" ||
+    quantity === "" ||
+    price === ""){
+
+        if(language === "hi"){
+
+            alert("सभी जानकारी भरें");
+        }
+
+        else if(language === "mr"){
+
+            alert("सर्व माहिती भरा");
+        }
+
+        else{
+
+            alert("Fill all fields");
+        }
+
+        return;
+    }
+
+    groceryList.push({
+
+        name:name,
+        quantity:quantity,
+        price:price
+    });
+
+    localStorage.setItem(
+        "groceryList",
+        JSON.stringify(groceryList)
+    );
+
+    /* SAVE TO RECORDS */
+
+    records.push({
+
+        type:"grocery",
+        item:name,
+        value:quantity + " - ₹" + price,
+        date:new Date().toLocaleString()
+    });
+
+    localStorage.setItem(
+        "records",
+        JSON.stringify(records)
+    );
+
+    render();
+
+    document.getElementById("item").value = "";
+    document.getElementById("quantity").value = "";
+    document.getElementById("price").value = "";
+
+    document.getElementById("item").focus();
+}
+
+/* ENTER NAVIGATION */
+
+document.getElementById(
+"item"
+).addEventListener(
+"keydown",
+function(e){
+
+    if(e.key === "Enter"){
+
+        document.getElementById(
+        "quantity"
+        ).focus();
+    }
+});
+
+document.getElementById(
+"quantity"
+).addEventListener(
+"keydown",
+function(e){
+
+    if(e.key === "Enter"){
+
+        document.getElementById(
+        "price"
+        ).focus();
+    }
+});
+
+document.getElementById(
+"price"
+).addEventListener(
+"keydown",
+function(e){
+
+    if(e.key === "Enter"){
+
+        addItem();
+    }
+});
+
+/* APPLY LANGUAGE */
+
+function applyLanguage(language){
+
+    if(language === "hi"){
+
+        document.getElementById(
+        "groceryTitle"
+        ).innerText =
+        "किराना सूची";
+
+        document.getElementById(
+        "itemHead"
+        ).innerText =
+        "नाम";
+
+        document.getElementById(
+        "quantityHead"
+        ).innerText =
+        "मात्रा";
+
+        document.getElementById(
+        "priceHead"
+        ).innerText =
+        "कीमत";
+
+        document.getElementById(
+        "item"
+        ).placeholder =
+        "आइटम दर्ज करें";
+
+        document.getElementById(
+        "quantity"
+        ).placeholder =
+        "मात्रा दर्ज करें";
+
+        document.getElementById(
+        "price"
+        ).placeholder =
+        "कीमत दर्ज करें";
+
+        document.getElementById(
+        "addButton"
+        ).innerText =
+        "आइटम जोड़ें";
+
+        document.querySelector(
+        ".back-btn"
+        ).innerText =
+        "← होम";
+    }
+
+    else if(language === "mr"){
+
+        document.getElementById(
+        "groceryTitle"
+        ).innerText =
+        "किराणा यादी";
+
+        document.getElementById(
+        "itemHead"
+        ).innerText =
+        "नाव";
+
+        document.getElementById(
+        "quantityHead"
+        ).innerText =
+        "प्रमाण";
+
+        document.getElementById(
+        "priceHead"
+        ).innerText =
+        "किंमत";
+
+        document.getElementById(
+        "item"
+        ).placeholder =
+        "आयटम टाका";
+
+        document.getElementById(
+        "quantity"
+        ).placeholder =
+        "प्रमाण टाका";
+
+        document.getElementById(
+        "price"
+        ).placeholder =
+        "किंमत टाका";
+
+        document.getElementById(
+        "addButton"
+        ).innerText =
+        "आयटम जोडा";
+
+        document.querySelector(
+        ".back-btn"
+        ).innerText =
+        "← होम";
+    }
+
+    else{
+
+        document.getElementById(
+        "groceryTitle"
+        ).innerText =
+        "Grocery List";
+
+        document.getElementById(
+        "itemHead"
+        ).innerText =
+        "Item";
+
+        document.getElementById(
+        "quantityHead"
+        ).innerText =
+        "Quantity";
+
+        document.getElementById(
+        "priceHead"
+        ).innerText =
+        "Price";
+
+        document.getElementById(
+        "item"
+        ).placeholder =
+        "Enter Item";
+
+        document.getElementById(
+        "quantity"
+        ).placeholder =
+        "Enter Quantity";
+
+        document.getElementById(
+        "price"
+        ).placeholder =
+        "Enter Price";
+
+        document.getElementById(
+        "addButton"
+        ).innerText =
+        "Add Item";
+
+        document.querySelector(
+        ".back-btn"
+        ).innerText =
+        "← Home";
+    }
+
+    render();
+}
+
+/* INIT */
+
+window.onload = function(){
+
+    let savedLanguage =
+    localStorage.getItem("language")
+    || "en";
+
+    applyLanguage(savedLanguage);
+
+    render();
+
+    document.getElementById(
+    "item"
+    ).focus();
+};
+
+</script>
+
+</body>
+</html>

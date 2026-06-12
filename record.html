@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Records</title>
+
+<style>
+
+body{
+    margin:0;
+    font-family:Arial;
+    background:#f4f4f4;
+}
+
+.header{
+    background:#2e7d32;
+    color:white;
+    padding:20px;
+    text-align:center;
+}
+
+.container{
+    margin:30px;
+    background:white;
+    padding:20px;
+    border-radius:10px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    background:#43a047;
+    color:white;
+    padding:15px;
+}
+
+td{
+    padding:12px;
+    border-bottom:1px solid #ddd;
+    text-align:center;
+}
+
+button{
+    padding:6px 10px;
+    margin:2px;
+    border:none;
+    cursor:pointer;
+    border-radius:4px;
+}
+
+.delete{
+    background:#e53935;
+    color:white;
+}
+
+.home-btn{
+    display:inline-block;
+    margin-top:20px;
+    padding:10px 20px;
+    background:#2e7d32;
+    color:white;
+    text-decoration:none;
+    border-radius:5px;
+}
+
+#totalBox{
+    margin-top:20px;
+    background:#e8f5e9;
+    padding:15px;
+    border-radius:8px;
+    font-size:20px;
+    font-weight:bold;
+    text-align:center;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+
+    <h1 id="title">
+        Records
+    </h1>
+
+</div>
+
+<div class="container">
+
+<table>
+
+<thead>
+
+<tr>
+
+    <th id="typeHead">
+        Type
+    </th>
+
+    <th id="itemHead">
+        Item
+    </th>
+
+    <th id="valueHead">
+        Value
+    </th>
+
+    <th id="dateHead">
+        Date
+    </th>
+
+    <th></th>
+
+</tr>
+
+</thead>
+
+<tbody id="recordTable"></tbody>
+
+</table>
+
+<!-- TOTAL BUDGET -->
+
+<div id="totalBox">
+
+    Total Budget :
+    ₹<span id="totalBudget">0</span>
+
+</div>
+
+<a href="index.html"
+class="home-btn"
+id="homeBtn">
+
+    Home
+
+</a>
+
+</div>
+
+<script>
+
+let records =
+JSON.parse(
+localStorage.getItem("records")
+) || [];
+
+/* LOAD TABLE */
+
+function loadRecords(){
+
+    let table =
+    document.getElementById(
+    "recordTable"
+    );
+
+    table.innerHTML = "";
+
+    let total = 0;
+
+    records.forEach((r, index)=>{
+
+        /* ADD ONLY PRICE */
+
+        if(r.type === "grocery"){
+
+            let match =
+            r.value.match(/₹(\d+)/);
+
+            if(match){
+
+                total += Number(match[1]);
+            }
+        }
+
+        else{
+
+            let valueText =
+            r.value.replace(/[^\d]/g,'');
+
+            total += Number(valueText);
+        }
+
+        table.innerHTML += `
+
+        <tr>
+
+            <td>
+                ${r.type}
+            </td>
+
+            <td contenteditable="true"
+                onblur="editRecord(${index}, 'item', this.innerText)">
+
+                ${r.item}
+
+            </td>
+
+            <td contenteditable="true"
+                onblur="editRecord(${index}, 'value', this.innerText)">
+
+                ${r.value}
+
+            </td>
+
+            <td>
+                ${r.date}
+            </td>
+
+            <td>
+
+                <button class="delete"
+                onclick="deleteRecord(${index})">
+
+                    Delete
+
+                </button>
+
+            </td>
+
+        </tr>
+        `;
+    });
+
+    document.getElementById(
+    "totalBudget"
+    ).innerText = total;
+}
+
+/* EDIT */
+
+function editRecord(index, field, value){
+
+    records[index][field] = value;
+
+    localStorage.setItem(
+    "records",
+    JSON.stringify(records)
+    );
+
+    loadRecords();
+}
+
+/* DELETE */
+
+function deleteRecord(index){
+
+    records.splice(index,1);
+
+    localStorage.setItem(
+    "records",
+    JSON.stringify(records)
+    );
+
+    loadRecords();
+}
+
+/* TRANSLATION */
+
+function applyLanguage(language){
+
+    if(language === "hi"){
+
+        document.getElementById(
+        "title"
+        ).innerText =
+        "रिकॉर्ड";
+
+        document.getElementById(
+        "typeHead"
+        ).innerText =
+        "प्रकार";
+
+        document.getElementById(
+        "itemHead"
+        ).innerText =
+        "आइटम";
+
+        document.getElementById(
+        "valueHead"
+        ).innerText =
+        "मूल्य";
+
+        document.getElementById(
+        "dateHead"
+        ).innerText =
+        "दिनांक";
+
+        document.getElementById(
+        "homeBtn"
+        ).innerText =
+        "होम";
+
+        document.getElementById(
+        "totalBox"
+        ).innerHTML =
+
+        `कुल बजट :
+        ₹<span id="totalBudget">0</span>`;
+    }
+
+    else if(language === "mr"){
+
+        document.getElementById(
+        "title"
+        ).innerText =
+        "रेकॉर्ड";
+
+        document.getElementById(
+        "typeHead"
+        ).innerText =
+        "प्रकार";
+
+        document.getElementById(
+        "itemHead"
+        ).innerText =
+        "आयटम";
+
+        document.getElementById(
+        "valueHead"
+        ).innerText =
+        "किंमत";
+
+        document.getElementById(
+        "dateHead"
+        ).innerText =
+        "दिनांक";
+
+        document.getElementById(
+        "homeBtn"
+        ).innerText =
+        "होम";
+
+        document.getElementById(
+        "totalBox"
+        ).innerHTML =
+
+        `एकूण बजेट :
+        ₹<span id="totalBudget">0</span>`;
+    }
+
+    else{
+
+        document.getElementById(
+        "title"
+        ).innerText =
+        "Records";
+
+        document.getElementById(
+        "typeHead"
+        ).innerText =
+        "Type";
+
+        document.getElementById(
+        "itemHead"
+        ).innerText =
+        "Item";
+
+        document.getElementById(
+        "valueHead"
+        ).innerText =
+        "Value";
+
+        document.getElementById(
+        "dateHead"
+        ).innerText =
+        "Date";
+
+        document.getElementById(
+        "homeBtn"
+        ).innerText =
+        "Home";
+
+        document.getElementById(
+        "totalBox"
+        ).innerHTML =
+
+        `Total Budget :
+        ₹<span id="totalBudget">0</span>`;
+    }
+
+    loadRecords();
+}
+
+/* INIT */
+
+window.onload = function(){
+
+    let lang =
+    localStorage.getItem("language")
+    || "en";
+
+    applyLanguage(lang);
+};
+
+</script>
+
+</body>
+</html>

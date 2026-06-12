@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+    <title>Settings</title>
+
+    <style>
+
+        body{
+            margin:0;
+            font-family:Arial, sans-serif;
+            background:#f4f4f4;
+        }
+
+        .header{
+            background:#2e7d32;
+            color:white;
+            padding:20px;
+            text-align:center;
+        }
+
+        .container{
+            margin:30px;
+            background:white;
+            padding:30px;
+            border-radius:10px;
+        }
+
+        h2{
+            color:#2e7d32;
+        }
+
+        select{
+            padding:10px;
+            width:220px;
+            margin-top:10px;
+        }
+
+        .help-box{
+            margin-top:30px;
+            background:#e8f5e9;
+            padding:20px;
+            border-radius:10px;
+        }
+
+        .btn{
+            text-decoration:none;
+            background:#2e7d32;
+            color:white;
+            padding:10px 20px;
+            border-radius:5px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+
+    <div class="header">
+
+        <h1 id="settingsTitle">
+            Settings
+        </h1>
+
+    </div>
+
+    <!-- Main Container -->
+
+    <div class="container">
+
+        <h2 id="languageHeading">
+            Select Language
+        </h2>
+
+        <select id="languageSelect"
+        onchange="changeLanguage(this.value)">
+
+            <option value="en">
+                English
+            </option>
+
+            <option value="hi">
+                Hindi
+            </option>
+
+            <option value="mr">
+                Marathi
+            </option>
+
+        </select>
+
+        <!-- Help Section -->
+
+        <div class="help-box">
+
+            <h2 id="helpHeading">
+                Help
+            </h2>
+
+            <p id="helpText1">
+                This Smart Grocery Budget Planner
+                helps users manage grocery items
+                and monthly expenses easily.
+            </p>
+
+            <p id="helpText2">
+                You can add grocery items,
+                create budgets and track spending.
+            </p>
+
+        </div>
+
+        <br><br>
+
+        <a href="index.html"
+        class="btn"
+        id="backButton">
+
+            ← Back to Home
+
+        </a>
+
+    </div>
+
+    <script>
+
+        /* CHANGE LANGUAGE */
+
+        function changeLanguage(language){
+
+            localStorage.setItem(
+                "language",
+                language
+            );
+
+            location.reload();
+        }
+
+        /* APPLY LANGUAGE */
+
+        function applyLanguage(language){
+
+            if(language === "hi"){
+
+                document.getElementById(
+                    "settingsTitle"
+                ).innerText = "सेटिंग्स";
+
+                document.getElementById(
+                    "languageHeading"
+                ).innerText = "भाषा चुनें";
+
+                document.getElementById(
+                    "helpHeading"
+                ).innerText = "सहायता";
+
+                document.getElementById(
+                    "helpText1"
+                ).innerText =
+                "यह स्मार्ट ग्रोसरी बजट प्लानर उपयोगकर्ताओं को किराना और मासिक खर्च प्रबंधित करने में मदद करता है।";
+
+                document.getElementById(
+                    "helpText2"
+                ).innerText =
+                "आप किराना आइटम जोड़ सकते हैं, बजट बना सकते हैं और खर्च ट्रैक कर सकते हैं।";
+
+                document.getElementById(
+                    "backButton"
+                ).innerText =
+                "← होम";
+            }
+
+            else if(language === "mr"){
+
+                document.getElementById(
+                    "settingsTitle"
+                ).innerText = "सेटिंग्ज";
+
+                document.getElementById(
+                    "languageHeading"
+                ).innerText = "भाषा निवडा";
+
+                document.getElementById(
+                    "helpHeading"
+                ).innerText = "मदत";
+
+                document.getElementById(
+                    "helpText1"
+                ).innerText =
+                "हा स्मार्ट किराणा बजेट प्लॅनर वापरकर्त्यांना किराणा आणि मासिक खर्च व्यवस्थापित करण्यास मदत करतो.";
+
+                document.getElementById(
+                    "helpText2"
+                ).innerText =
+                "तुम्ही किराणा आयटम जोडू शकता, बजेट तयार करू शकता आणि खर्च ट्रॅक करू शकता.";
+
+                document.getElementById(
+                    "backButton"
+                ).innerText =
+                "← होम";
+            }
+
+            else{
+
+                document.getElementById(
+                    "settingsTitle"
+                ).innerText = "Settings";
+
+                document.getElementById(
+                    "languageHeading"
+                ).innerText =
+                "Select Language";
+
+                document.getElementById(
+                    "helpHeading"
+                ).innerText = "Help";
+
+                document.getElementById(
+                    "helpText1"
+                ).innerText =
+                "This Smart Grocery Budget Planner helps users manage grocery items and monthly expenses easily.";
+
+                document.getElementById(
+                    "helpText2"
+                ).innerText =
+                "You can add grocery items, create budgets and track spending.";
+
+                document.getElementById(
+                    "backButton"
+                ).innerText =
+                "← Home";
+            }
+        }
+
+        /* LOAD SAVED LANGUAGE */
+
+        window.onload = function(){
+
+            let savedLanguage =
+            localStorage.getItem("language")
+            || "en";
+
+            document.getElementById(
+                "languageSelect"
+            ).value = savedLanguage;
+
+            applyLanguage(savedLanguage);
+        }
+
+    </script>
+
+</body>
+</html>

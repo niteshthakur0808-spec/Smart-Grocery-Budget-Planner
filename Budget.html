@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Budget List</title>
+
+<style>
+
+body{
+    margin:0;
+    font-family:Arial;
+    background:#f4f4f4;
+}
+
+.header{
+    background:#2e7d32;
+    color:white;
+    padding:20px;
+    text-align:center;
+}
+
+.container{
+    margin:30px;
+    background:white;
+    padding:20px;
+    border-radius:10px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    background:#43a047;
+    color:white;
+    padding:15px;
+}
+
+td{
+    padding:12px;
+    border-bottom:1px solid #ddd;
+    text-align:center;
+}
+
+input{
+    padding:10px;
+    margin:10px;
+    width:200px;
+}
+
+button{
+    padding:10px 20px;
+    background:#2e7d32;
+    color:white;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+.remove-btn{
+    background:#e53935;
+    color:white;
+    border:none;
+    padding:6px 12px;
+    border-radius:4px;
+    cursor:pointer;
+}
+
+.back-btn{
+    text-decoration:none;
+    background:#2e7d32;
+    color:white;
+    padding:10px 20px;
+    border-radius:5px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+
+    <h1 id="budgetTitle">
+        Budget List
+    </h1>
+
+</div>
+
+<div class="container">
+
+<table>
+
+<thead>
+
+<tr>
+
+    <th id="expenseHead">
+        Expense
+    </th>
+
+    <th id="amountHead">
+        Amount
+    </th>
+
+    <th></th>
+
+</tr>
+
+</thead>
+
+<tbody id="tableBody"></tbody>
+
+</table>
+
+<br>
+
+<input
+type="text"
+id="expense"
+placeholder="Enter Expense">
+
+<input
+type="number"
+id="amount"
+placeholder="Enter Amount">
+
+<button
+onclick="addBudget()"
+id="addBudgetBtn">
+
+    Add Budget
+
+</button>
+
+<br><br>
+
+<a href="index.html"
+class="back-btn">
+
+    ← Home
+
+</a>
+
+</div>
+
+<script>
+
+let budgetList =
+JSON.parse(
+localStorage.getItem("budgetList")
+) || [];
+
+let records =
+JSON.parse(
+localStorage.getItem("records")
+) || [];
+
+/* TRANSLATE TEXT */
+
+function translateText(text, language){
+
+    let words = {
+
+        groceries:{
+            hi:"किराना",
+            mr:"किराणा",
+            en:"Groceries"
+        },
+
+        electricity:{
+            hi:"बिजली",
+            mr:"वीज",
+            en:"Electricity"
+        },
+
+        milk:{
+            hi:"दूध",
+            mr:"दूध",
+            en:"Milk"
+        }
+
+    };
+
+    let lower =
+    text.toLowerCase();
+
+    for(let key in words){
+
+        if(lower === key){
+
+            return words[key][language];
+        }
+    }
+
+    return text;
+}
+
+/* RENDER */
+
+function render(){
+
+    let language =
+    localStorage.getItem("language")
+    || "en";
+
+    let table =
+    document.getElementById("tableBody");
+
+    table.innerHTML = "";
+
+    budgetList.forEach((item, index)=>{
+
+        let translated =
+        translateText(
+            item.expense,
+            language
+        );
+
+        table.innerHTML += `
+
+        <tr>
+
+            <td contenteditable="true"
+            onblur="updateItem(${index}, 'expense', this.innerText)">
+
+                ${translated}
+
+            </td>
+
+            <td contenteditable="true"
+            onblur="updateItem(${index}, 'amount', this.innerText)">
+
+                ₹${item.amount}
+
+            </td>
+
+            <td>
+
+                <button
+                class="remove-btn"
+                onclick="removeItem(${index})">
+
+                    Remove
+
+                </button>
+
+            </td>
+
+        </tr>
+        `;
+    });
+}
+
+/* UPDATE */
+
+function updateItem(index, field, value){
+
+    budgetList[index][field] = value;
+
+    localStorage.setItem(
+        "budgetList",
+        JSON.stringify(budgetList)
+    );
+}
+
+/* REMOVE */
+
+function removeItem(index){
+
+    budgetList.splice(index, 1);
+
+    localStorage.setItem(
+        "budgetList",
+        JSON.stringify(budgetList)
+    );
+
+    render();
+}
+
+/* ADD */
+
+function addBudget(){
+
+    let expense =
+    document.getElementById("expense").value;
+
+    let amount =
+    document.getElementById("amount").value;
+
+    let language =
+    localStorage.getItem("language")
+    || "en";
+
+    if(expense === "" || amount === ""){
+
+        if(language === "hi"){
+
+            alert("सभी जानकारी भरें");
+        }
+
+        else if(language === "mr"){
+
+            alert("सर्व माहिती भरा");
+        }
+
+        else{
+
+            alert("Fill all fields");
+        }
+
+        return;
+    }
+
+    budgetList.push({
+
+        expense:expense,
+        amount:amount
+    });
+
+    localStorage.setItem(
+        "budgetList",
+        JSON.stringify(budgetList)
+    );
+
+    /* SAVE TO RECORDS */
+
+    records.push({
+
+        type:"budget",
+        item:expense,
+        value:"₹" + amount,
+        date:new Date().toLocaleString()
+    });
+
+    localStorage.setItem(
+        "records",
+        JSON.stringify(records)
+    );
+
+    render();
+
+    document.getElementById("expense").value = "";
+    document.getElementById("amount").value = "";
+
+    document.getElementById("expense").focus();
+}
+
+/* ENTER NAVIGATION */
+
+document.getElementById(
+"expense"
+).addEventListener(
+"keydown",
+function(e){
+
+    if(e.key === "Enter"){
+
+        document.getElementById(
+        "amount"
+        ).focus();
+    }
+});
+
+document.getElementById(
+"amount"
+).addEventListener(
+"keydown",
+function(e){
+
+    if(e.key === "Enter"){
+
+        addBudget();
+    }
+});
+
+/* APPLY LANGUAGE */
+
+function applyLanguage(language){
+
+    if(language === "hi"){
+
+        document.getElementById(
+        "budgetTitle"
+        ).innerText =
+        "मासिक बजट प्लानर";
+
+        document.getElementById(
+        "expenseHead"
+        ).innerText =
+        "खर्च";
+
+        document.getElementById(
+        "amountHead"
+        ).innerText =
+        "राशि";
+
+        document.getElementById(
+        "expense"
+        ).placeholder =
+        "खर्च का नाम";
+
+        document.getElementById(
+        "amount"
+        ).placeholder =
+        "राशि दर्ज करें";
+
+        document.getElementById(
+        "addBudgetBtn"
+        ).innerText =
+        "बजट जोड़ें";
+
+        document.querySelector(
+        ".back-btn"
+        ).innerText =
+        "← होम";
+    }
+
+    else if(language === "mr"){
+
+        document.getElementById(
+        "budgetTitle"
+        ).innerText =
+        "मासिक बजेट प्लॅनर";
+
+        document.getElementById(
+        "expenseHead"
+        ).innerText =
+        "खर्च";
+
+        document.getElementById(
+        "amountHead"
+        ).innerText =
+        "रक्कम";
+
+        document.getElementById(
+        "expense"
+        ).placeholder =
+        "खर्चाचे नाव";
+
+        document.getElementById(
+        "amount"
+        ).placeholder =
+        "रक्कम टाका";
+
+        document.getElementById(
+        "addBudgetBtn"
+        ).innerText =
+        "बजेट जोडा";
+
+        document.querySelector(
+        ".back-btn"
+        ).innerText =
+        "← होम";
+    }
+
+    else{
+
+        document.getElementById(
+        "budgetTitle"
+        ).innerText =
+        "Budget List";
+
+        document.getElementById(
+        "expenseHead"
+        ).innerText =
+        "Expense";
+
+        document.getElementById(
+        "amountHead"
+        ).innerText =
+        "Amount";
+
+        document.getElementById(
+        "expense"
+        ).placeholder =
+        "Enter Expense";
+
+        document.getElementById(
+        "amount"
+        ).placeholder =
+        "Enter Amount";
+
+        document.getElementById(
+        "addBudgetBtn"
+        ).innerText =
+        "Add Budget";
+
+        document.querySelector(
+        ".back-btn"
+        ).innerText =
+        "← Home";
+    }
+
+    render();
+}
+
+/* INIT */
+
+window.onload = function(){
+
+    let savedLanguage =
+    localStorage.getItem("language")
+    || "en";
+
+    applyLanguage(savedLanguage);
+
+    render();
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,321 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #bbecb6;
+}
+
+/* Sidebar */
+
+.sidebar {
+
+    position: fixed;
+
+    left: -220px;
+
+    top: 0;
+
+    width: 220px;
+
+    height: 100%;
+
+    transition: 0.3s;
+
+    padding-top: 120px;
+}
+
+.sidebar a {
+    display: block;
+    color: rgba(43, 39, 39, 0.892);
+    padding: 15px;
+    text-decoration: none;
+}
+
+.sidebar a:hover {
+    background: #717771;
+}
+
+/* Main */
+
+.main {
+    transition: margin-left 0.3s;
+}
+
+/* Navbar */
+
+.navbar {
+    display: flex;
+    align-items: center;
+    background: #388e3c;
+    color: rgba(217, 208, 208, 0.829);
+    padding: 15px;
+}
+
+.menu-btn {
+
+    font-size:34px;
+
+    margin-right:20px;
+
+    background:none;
+
+    border:none;
+
+    color:rgba(216, 215, 215, 0.895);
+
+    cursor:pointer;
+}
+
+/* GREETING CONTAINER */
+
+.greeting-container{
+
+    display:flex;
+
+    justify-content:center;
+
+    margin-top:40px;
+}
+
+.greeting-bubble{
+
+    color:#0dc770;
+
+    padding:20px 40px;
+
+    border-radius:20px;
+
+    font-size:48px;
+
+    font-weight:bold;
+
+    text-align:center;
+}
+
+/* Table */
+
+.table-container {
+    margin: 30px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    background: #43a047;
+    color: white;
+    padding: 15px;
+}
+
+td {
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Form */
+
+.form-container {
+    margin: 30px;
+}
+
+input {
+    padding: 10px;
+    margin: 10px;
+    width: 200px;
+}
+
+button {
+    padding: 10px 20px;
+    background: #2e7d32;
+    color: rgb(17, 2, 2);
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+/* STICKER SECTION */
+
+.sticker-section{
+
+    position:relative;
+
+    width:100%;
+
+    height:420px;
+
+    margin-top:40px;
+
+    overflow:hidden;
+}
+
+/* STICKER CARD */
+
+.sticker-card{
+
+    position:absolute;
+
+    animation:float 4s ease-in-out infinite;
+
+    transition:0.3s ease;
+}
+
+/* SMALLER STICKERS */
+
+.sticker-card img{
+
+    width:90px;
+
+    height:90px;
+
+    object-fit:contain;
+
+    filter:
+    drop-shadow(
+        0 6px 8px rgba(0,0,0,0.2)
+    );
+}
+
+/* HOVER EFFECT */
+
+.sticker-card:hover{
+
+    transform:scale(1.15)
+    rotate(-8deg);
+}
+
+/* MOLECULE STYLE POSITIONS */
+
+.sticker-card:nth-child(1){
+
+    top:20px;
+    left:10%;
+}
+
+.sticker-card:nth-child(2){
+
+    top:120px;
+    left:28%;
+}
+
+.sticker-card:nth-child(3){
+
+    top:40px;
+    right:18%;
+}
+
+.sticker-card:nth-child(4){
+
+    bottom:30px;
+    left:18%;
+}
+
+.sticker-card:nth-child(5){
+
+    bottom:80px;
+    right:12%;
+}
+
+.sticker-card:nth-child(6){
+
+    top:180px;
+    right:35%;
+}
+
+.sticker-card:nth-child(7){
+
+    top:70px;
+    left:48%;
+}
+
+.sticker-card:nth-child(8){
+
+    bottom:20px;
+    right:42%;
+}
+
+/* FLOAT ANIMATION */
+
+@keyframes float{
+
+    0%{
+        transform:translateY(0px);
+    }
+
+    50%{
+        transform:translateY(-12px);
+    }
+
+    100%{
+        transform:translateY(0px);
+    }
+}
+
+.grocery-shortcut{
+    text-decoration:none;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+}
+
+.grocery-shortcut img{
+    width:80px;
+    height:80px;
+}
+
+.grocery-label{
+    margin-top:8px;
+    font-size:20px;
+    font-family:'Patrick Hand', cursive;
+    font-weight:bold;
+    color:#2e7d32;
+    text-align:center;
+}
+
+.grocery-shortcut{
+    text-decoration:none;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+}
+
+.grocery-shortcut img{
+    width:90px;
+    height:90px;
+}
+
+.grocery-label{
+    margin-top:8px;
+    font-size:18px;
+    font-weight:bold;
+    font-family:"Comic Sans MS", cursive;
+    color:#2e7d32;
+    text-align:center;
+}
+
+.record-shortcut{
+    text-decoration:none;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+}
+
+.record-shortcut img{
+    width:90px;
+    height:90px;
+}
+
+.record-label{
+    margin-top:8px;
+    font-size:18px;
+    font-family:"Comic Sans MS", cursive;
+    font-weight:bold;
+    color:#2e7d32;
+    text-align:center;
+}

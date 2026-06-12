@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Grocery Budget Planner</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Sidebar -->
+
+<div id="sidebar" class="sidebar">
+
+    <a href="grocery.html"
+    id="GroceryText">
+
+        Grocery
+
+    </a>
+
+    <a href="budget.html"
+    id="budgetText">
+
+        Budget
+
+    </a>
+
+    <a href="record.html"
+    id="recordText">
+        
+        Record
+    </a>
+
+    <a href="settings.html"
+    id="settingsText">
+
+        Settings
+
+    </a>
+
+</div>
+
+    <!-- Main -->
+    <div class="main">
+
+        <!-- Navbar -->
+        <div class="navbar">
+
+            <button class="menu-btn"
+            onclick="toggleMenu()">
+                ☰
+            </button>
+
+            <h1 id="titleText">
+                Smart Grocery Budget Planner
+            </h1>
+
+        </div>
+
+        <!-- Greeting Bubble -->
+        <div class="greeting-container">
+
+            <div class="greeting-bubble"
+            id="greetingBubble">
+
+                Good Morning 👋
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Grocery Stickers -->
+
+<div class="sticker-section">
+
+    <!-- Budget Shortcut -->
+<a href="budget.html" class="sticker-card grocery-shortcut">
+
+    <img
+    src="https://cdn-icons-png.flaticon.com/512/2991/2991112.png"
+    alt="Budget">
+
+    <div
+    class="grocery-label"
+    id="budgetStickerText">
+
+        For Budget
+
+    </div>
+
+</a>
+
+    <!-- Milk -->
+    <div class="sticker-card">
+        <img
+        src="https://cdn-icons-png.flaticon.com/512/2674/2674505.png"
+        alt="Milk">
+    </div>
+
+    <!-- Eggs -->
+    <div class="sticker-card">
+        <img
+        src="https://cdn-icons-png.flaticon.com/512/837/837560.png"
+        alt="Eggs">
+    </div>
+
+    <!-- Bread -->
+    <div class="sticker-card">
+        <img
+        src="https://cdn-icons-png.flaticon.com/512/2713/2713474.png"
+        alt="Bread">
+    </div>
+
+    <!-- Record Shortcut -->
+<a href="record.html"
+class="sticker-card record-shortcut">
+
+    <img
+    src="https://cdn-icons-png.flaticon.com/512/415/415733.png"
+    alt="Record">
+
+    <div class="record-label"
+    id="recordStickerText">
+        For Record
+    </div>
+
+</a>
+    <!-- Carrot -->
+    <div class="sticker-card">
+        <img
+        src="https://cdn-icons-png.flaticon.com/512/766/766020.png"
+        alt="Carrot">
+    </div>
+
+<!-- Grocery Shortcut -->
+<a href="grocery.html" class="sticker-card grocery-shortcut">
+
+    <img
+    src="https://cdn-icons-png.flaticon.com/512/3081/3081967.png"
+    alt="Grocery">
+
+    <div
+    class="grocery-label"
+    id="groceryStickerText">
+
+        For Grocery
+
+    </div>
+
+</a>
+
+    <!-- Fish -->
+    <div class="sticker-card">
+        <img
+        src="https://cdn-icons-png.flaticon.com/512/3075/3075977.png"
+        alt="Fish">
+    </div>
+
+</div>
+
+<script>
+
+    let menuOpen = false;
+
+    function toggleMenu(){
+
+        const sidebar =
+        document.getElementById("sidebar");
+
+        if(menuOpen){
+            sidebar.style.left = "-220px";
+        }
+        else{
+            sidebar.style.left = "0";
+        }
+
+        menuOpen = !menuOpen;
+    }
+
+    /* CLOSE MENU */
+
+    document.addEventListener("click",
+    function(event){
+
+        const sidebar =
+        document.getElementById("sidebar");
+
+        const menuBtn =
+        document.querySelector(".menu-btn");
+
+        if(
+            menuOpen &&
+            !sidebar.contains(event.target) &&
+            !menuBtn.contains(event.target)
+        ){
+
+            sidebar.style.left = "-220px";
+
+            menuOpen = false;
+        }
+    });
+
+    /* GREETING */
+
+    function updateGreeting(){
+
+        let now = new Date();
+
+        let indiaTime =
+        new Date(
+            now.toLocaleString(
+                "en-US",
+                {timeZone:"Asia/Kolkata"}
+            )
+        );
+
+        let hour = indiaTime.getHours();
+
+        let greeting = "";
+
+        let language =
+        localStorage.getItem("language")
+        || "en";
+
+        if(hour >= 5 && hour < 12){
+
+            greeting =
+            language === "hi"
+            ? "सुप्रभात 👋"
+            : language === "mr"
+            ? "शुभ सकाळ 👋"
+            : "Good Morning 👋";
+        }
+
+        else if(hour >= 12 && hour < 17){
+
+            greeting =
+            language === "hi"
+            ? "शुभ दोपहर 👋"
+            : language === "mr"
+            ? "शुभ दुपार 👋"
+            : "Good Afternoon 👋";
+        }
+
+        else if(hour >= 17 && hour < 21){
+
+            greeting =
+            language === "hi"
+            ? "शुभ संध्या 👋"
+            : language === "mr"
+            ? "शुभ संध्याकाळ 👋"
+            : "Good Evening 👋";
+        }
+
+        else{
+
+            greeting =
+            language === "hi"
+            ? "शुभ रात्रि 🌙"
+            : language === "mr"
+            ? "शुभ रात्री 🌙"
+            : "Good Night 🌙";
+        }
+
+        document.getElementById(
+            "greetingBubble"
+        ).innerText = greeting;
+    }
+
+    /* APPLY LANGUAGE */
+
+    function applyLanguage(language){
+
+    if(language === "hi"){
+
+        document.getElementById(
+        "GroceryText"
+        ).innerText =
+        "किराना";
+
+        document.getElementById(
+        "budgetText"
+        ).innerText =
+        "बजट";
+
+        document.getElementById(
+        "recordText"
+        ).innerText =
+        "रिकॉर्ड";
+
+        document.getElementById(
+        "settingsText"
+        ).innerText =
+        "सेटिंग्स";
+
+        document.getElementById(
+        "titleText"
+        ).innerText =
+        "स्मार्ट ग्रोसरी बजट प्लानर";
+
+        document.getElementById(
+        "budgetStickerText"
+        ).innerText =
+        "बजट के लिए";
+
+        document.getElementById(
+        "recordStickerText"
+        ).innerText =
+        "रिकॉर्ड के लिए";
+
+        document.getElementById(
+        "groceryStickerText"
+        ).innerText =
+        "किराने के लिए";
+    }
+
+    else if(language === "mr"){
+
+        document.getElementById(
+        "GroceryText"
+        ).innerText =
+        "किराणा";
+
+        document.getElementById(
+        "budgetText"
+        ).innerText =
+        "बजेट";
+
+        document.getElementById(
+        "recordText"
+        ).innerText =
+        "रेकॉर्ड";
+
+        document.getElementById(
+        "settingsText"
+        ).innerText =
+        "सेटिंग्ज";
+
+        document.getElementById(
+        "titleText"
+        ).innerText =
+        "स्मार्ट किराणा बजेट प्लॅनर";
+
+        document.getElementById(
+        "budgetStickerText"
+        ).innerText =
+        "बजेटसाठी";
+
+        document.getElementById(
+        "recordStickerText"
+        ).innerText =
+        "रेकॉर्डसाठी";
+
+        document.getElementById(
+        "groceryStickerText"
+        ).innerText =
+        "किराण्यासाठी";
+    }
+
+    else{
+
+        document.getElementById(
+        "GroceryText"
+        ).innerText =
+        "Grocery";
+
+        document.getElementById(
+        "budgetText"
+        ).innerText =
+        "Budget";
+
+        document.getElementById(
+        "recordText"
+        ).innerText =
+        "Record";
+
+        document.getElementById(
+        "settingsText"
+        ).innerText =
+        "Settings";
+
+        document.getElementById(
+        "titleText"
+        ).innerText =
+        "Smart Grocery Budget Planner";
+
+        document.getElementById(
+        "budgetStickerText"
+        ).innerText =
+        "For Budget";
+
+        document.getElementById(
+        "recordStickerText"
+        ).innerText =
+        "For Record";
+
+        document.getElementById(
+        "groceryStickerText"
+        ).innerText =
+        "For Grocery";
+    }
+
+    updateGreeting();
+}
+
+    /* LOAD SAVED LANGUAGE */
+
+    window.onload = function(){
+
+        let savedLanguage =
+        localStorage.getItem("language")
+        || "en";
+
+        applyLanguage(savedLanguage);
+
+    }
+
+</script>
+
+</body>
+</html>
